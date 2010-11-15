@@ -1,5 +1,5 @@
-var focusTimer;
-var a11y = {
+Prototype.a11y = {
+	focusTimer: false,
 	prepareBuffer: function() {
 		var objHidden = document.createElement('input');
 
@@ -13,10 +13,10 @@ var a11y = {
 		var objHidden = $('virtualbufferupdate');
 		if (objHidden)
 		{
-				if (objHidden.getAttribute('value') == '1'){
-						objHidden.setAttribute('value', '0');
+				if (objHidden.readAttribute('value') == '1'){
+						objHidden.writeAttribute('value', '0');
 				} else {			
-						objHidden.setAttribute('value', '1');
+						objHidden.writeAttribute('value', '1');
 				}
 		}
 	},
@@ -47,23 +47,45 @@ var a11yElement = {
 		setTabIndex: function(element,index) {
 			 var element = $(element);
 			if(Prototype.Browser.IE) {
-				return element.setAttribute('tabIndex',index);
+				return element.writeAttribute('tabIndex',index);
 			} else {
-				return element.setAttribute('tabindex',index);
+				return element.writeAttribute('tabindex',index);
+			}	
+		},
+		removeTabIndex: function(element,index) {
+			 var element = $(element);
+			if(Prototype.Browser.IE) {
+				return element.removeAttribute('tabIndex');
+			} else {
+				return element.removeAttribute('tabindex');
 			}	
 		},
 		setFocus: function(element,time){ 
 			if(!time) {var time = 0 };
 			var element = $(element);  
-			clearTimeout(focusTimer); 
+			clearTimeout(Prototype.a11y.focusTimer); 
 			element.setTabIndex('-1');
-			setTimeout(a11y.updateBuffer, 0); 
-			focusTimer = setTimeout(function(){  
+			setTimeout(Prototype.a11y.updateBuffer, 0); 
+			Prototype.a11y.focusTimer = setTimeout(function(){  
 				try{  
 					element.focus();  
 				} catch(e){}  
 			}, time || 1);  
 			return this;  
-		}
+		},
+		hide: function(element) {
+			var element = $(element);
+			element.style.display = 'none';
+			element.writeAttribute('aria-hidden', 'true');
+			element.setTabIndex('-1');
+			return element;
+		},
+		show: function(element) {
+			var element = $(element);
+			element.style.display = '';
+			element.writeAttribute('aria-hidden', 'false');
+			element.removeTabIndex();
+			return element;
+		}		
 }
 Element.addMethods(a11yElement);

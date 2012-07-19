@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>prototype-a11y Test</title>
+<script src="prototype.min.js" type="text/javascript"></script>
+<script src="prototype.a11y.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+document.observe("dom:loaded", function() {
+	Prototype.a11y.prepareBuffer();
+ $('showhide').observe('click', function(ev) {
+	 $('showhideElement').toggle().setFocus();
+	 Prototype.a11y.updateBuffer();
+	 
+ });											
+});
+
+
+</script>
+</head>
+
+<body>
+<h1>prototype-a11y Tests</h1>
+
+<h2>show/hide with aria-hidden attribute</h2>
+
+<p><a href="#" id="showhide">Toggle</a>  <span id="showhideElement">toggled element</span></p>
+
+
+
+</body>
+</html>
